@@ -152,7 +152,26 @@ if tema == 'DEMANDAS':
     fig.update_xaxes(title=None,tickfont_color='black',tickfont_size=15)
     fig.update_layout(legend=dict(title=None, orientation='h',x=0.3),showlegend=False)
     fig.update_traces(textfont_size=15,textfont_color='black',textposition='top left')
-    fig 
+    fig
+    
+    dt = painel.groupby(['SERVIÇO']).count().reset_index().sort_values('OS',ascending=False)
+    fig = px.bar(dt,x='SERVIÇO',y='OS',color='SERVIÇO',title=f'CONTAGEM DE SERVIÇO ({situacao})',text='OS',width=900,height=400)
+    fig.update_yaxes(title=None,tickfont_color='black')
+    fig.update_xaxes(title=None,tickfont_color='black')
+    fig.update_layout(legend=dict(title=None),showlegend=False)
+    fig.update_traces(textfont_size=15,textangle=0, textposition="outside", cliponaxis=False)
+    fig
+    
+    espera = painel[['SERVIÇO','DIAS']]
+    dt = espera.groupby(['SERVIÇO']).mean().round(2).reset_index().sort_values('DIAS',ascending=False)
+    fig = px.bar(dt,x='SERVIÇO',y='DIAS',color='SERVIÇO',title=f'TEMPO MÉDIO DE ESPERA (EM DIAS)',text='DIAS',width=900,height=400)
+    fig.update_yaxes(title=None,tickfont_color='black')
+    fig.update_xaxes(title=None,tickfont_color='black')
+    fig.update_layout(legend=dict(title=None),showlegend=False)
+    fig.update_traces(textfont_size=15,textangle=0, textposition="outside", cliponaxis=False)
+    fig
+    
+    st.markdown(''':black[****Obs.:*** Observar a motivação da espera, ex.: pendência de projeto ou de material, demandante ausente, complexidade da demanda etc.]''')
     
     dt = painel.groupby(['SETOR']).count().reset_index().sort_values('OS',ascending=False)
     fig = px.bar(dt,x='SETOR',y='OS',color='SETOR',title=f'PRINCIPAIS DEMANDANTES ({situacao})',text='OS',width=900,height=400)
@@ -165,6 +184,9 @@ if tema == 'DEMANDAS':
     st.markdown(''':black[****Obs.:*** O setor DINFRA, enquanto demandante, representa intervenções em área comum dos *campi*, 
                 ex.: estacionamento, reservatórios de água, circulação etc.]''')
     
+    with st.expander('Base de dados:'):
+        painel
+        
 if tema == 'TRANSPORTE':
     st.subheader('Painel de transporte')
     anos = transporte['ANO'].unique()
@@ -190,9 +212,6 @@ if tema == 'TRANSPORTE':
     c5.metric(f'Custo mensal médio:',cmformat)
     c6.metric(f'Custo médio por demanda:',dlformat)
     '-----'    
-    
-    
-    
     vtrans = transporte[['MÊS','TICKET','DESTINO','CONTROLE']]
     via = vtrans.groupby(['MÊS','DESTINO','CONTROLE']).count().reset_index().sort_values('CONTROLE')
     fig = px.line(via,x=['MÊS'],y='TICKET',text='TICKET',color='DESTINO',title='VIAGENS POR CAMPUS',width=900,height=500)
@@ -239,6 +258,9 @@ if tema == 'TRANSPORTE':
     fig.update_traces(textfont_size=15,textfont_color='black',textposition='top left')
     fig 
     
+    with st.expander('Base de dados:'):
+        transporte
+        
 if tema == 'CUSTOS':
     st.subheader('Painel de custos')
     '-----'
