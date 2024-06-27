@@ -102,7 +102,7 @@ if tema == 'DEMANDAS':
     dia = cc3.slider('Dias:',0,demandas['DIAS'].max())
 
     painel = demandas.loc[demandas['DIAS']>=dia].sort_values(by=['PRIORIDADE', 'DIAS'], ascending=[True, False])
-    painel = painel[['PRIORIDADE','OS','CAMPUS','SETOR','SERVIÇO','DIAS','MÊS','DETALHAMENTO','CONTROLE']]
+    painel = painel[['PRIORIDADE','OS','CAMPUS','SETOR','SERVIÇO','STATUS','DIAS','MÊS','DETALHAMENTO','CONTROLE']]
     with cc2.container():
         st.metric('DEMANDAS:',painel['PRIORIDADE'].count())
     
